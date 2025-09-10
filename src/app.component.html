@@ -1,0 +1,81 @@
+
+<header class="header max-w-7xl mx-auto px-4">
+    <nav class="navbar mt-4 flex items-center justify-between p-2 sm:p-4 flex-wrap gap-4 max-w-5xl mx-auto">
+        <a href="#" class="text-xl font-bold flex items-center gap-2">
+            <app-icon class="w-8 h-8"></app-icon>
+            <span style="color: var(--md-sys-color-primary)">Auralis</span>
+        </a>
+        <div class="flex items-center space-x-2 sm:space-x-4">
+            <a href="#about-me" class="expressive-button p-2 text-sm sm:text-base text-[var(--md-sys-color-primary)] hover:bg-[var(--md-sys-color-primary-container)]">
+                About Me
+            </a>
+            <button (click)="openFeedbackModal()" class="expressive-button p-2 text-sm sm:text-base text-[var(--md-sys-color-primary)] hover:bg-[var(--md-sys-color-primary-container)]">
+                Feedback
+            </button>
+            <input type="color" id="theme-picker" class="w-8 h-8 cursor-pointer border-none p-0 overflow-hidden rounded-full" value="#6C5BE5" (input)="setPrimaryColor($event)" />
+            <button (click)="toggleTheme()" class="expressive-button p-2 text-md-sys-color-primary">
+                <i class="fas" [class.fa-sun]="isDarkTheme()" [class.fa-moon]="!isDarkTheme()"></i>
+            </button>
+        </div>
+    </nav>
+</header>
+
+<main class="max-w-7xl mx-auto p-4 bg-[var(--md-sys-color-background)]">
+    <section class="hero-section text-center py-16 md:py-20 overflow-hidden">
+        <h1 class="hero-title-enter text-4xl md:text-6xl font-extrabold mb-4 leading-tight">
+            Royalty-Free Ambient Music
+        </h1>
+        <p class="hero-subtitle-enter text-lg md:text-xl mb-8 opacity-75 max-w-2xl mx-auto px-2">
+            Elevate your projects with high-quality, free-to-use soundscapes and visuals.
+        </p>
+        <div class="flex justify-center items-center gap-4">
+            <a href="#portfolio" class="expressive-button font-semibold py-3 px-8 text-lg shadow-lg"
+               style="background-color: var(--md-sys-color-primary); color: var(--md-sys-color-on-primary);">
+                Explore
+            </a>
+        </div>
+    </section>
+
+    <section id="portfolio" class="py-16">
+        <h2 class="text-3xl sm:text-4xl font-bold mb-12 text-center">Featured Tracks</h2>
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+            @for (track of tracks(); track track.id; let i = $index) {
+                <div class="expressive-card p-4 animated-item" appAnimateOnVisible [style.animation-delay.ms]="i * 100">
+                    <app-track-card [track]="track"></app-track-card>
+                </div>
+            }
+        </div>
+    </section>
+
+    <section id="about-me" class="py-16 text-center">
+        <div class="container mx-auto max-w-2xl">
+            <h2 class="text-2xl sm:text-3xl font-bold mb-4">About Me</h2>
+            <p class="text-lg opacity-80 mb-6">
+                Auralis is a project created by a passionate developer and sound enthusiast. My goal is to
+                provide high-quality, royalty-free ambient music for creators around the world. Every track is
+                crafted with care and attention to detail.
+            </p>
+        </div>
+    </section>
+
+    <footer>
+        <div class="social-links flex justify-center space-x-6 py-8">
+            <a href="#" class="social-icon expressive-button w-[50px] h-[50px] rounded-full inline-flex items-center justify-center">
+                <i class="fab fa-instagram"></i>
+            </a>
+            <a href="#" class="social-icon expressive-button w-[50px] h-[50px] rounded-full inline-flex items-center justify-center">
+                <i class="fab fa-github"></i>
+            </a>
+            <a href="#" class="social-icon expressive-button w-[50px] h-[50px] rounded-full inline-flex items-center justify-center">
+                <i class="fab fa-linkedin-in"></i>
+            </a>
+        </div>
+        <p class="text-center text-sm opacity-50 pb-8">© 2024 Auralis. All Rights Reserved.</p>
+    </footer>
+
+    <button class="scroll-top fixed bottom-6 right-6" [class.visible]="isScrollTopVisible()" (click)="scrollToTop()">
+        <i class="fas fa-arrow-up"></i>
+    </button>
+</main>
+
+<app-feedback-modal [isOpen]="isFeedbackModalOpen()" (closeModal)="closeFeedbackModal()"></app-feedback-modal>

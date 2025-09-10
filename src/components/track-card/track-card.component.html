@@ -1,0 +1,80 @@
+
+<div class="card-inner-container p-6 flex flex-col items-center text-center h-full">
+    <div class="relative w-full h-auto mb-4 shadow-lg rounded-3xl overflow-hidden">
+        <video #videoPlayer loop muted playsinline class="track-video">
+            <source [src]="track().videoUrl" type="video/mp4">
+        </video>
+        <img 
+            [ngSrc]="track().imageUrl"
+            alt="{{ track().title }}"
+            width="600"
+            height="400"
+            priority="true"
+            class="w-full h-auto object-cover rounded-3xl track-image"
+            [class.opacity-0]="isPlaying()"
+        />
+    </div>
+
+    <h3 class="text-xl sm:text-2xl font-bold">{{ track().title }}</h3>
+    <p class="mt-2 mb-4 text-opacity-80 flex-grow">{{ track().description }}</p>
+
+    <button 
+        class="download-button relative overflow-hidden min-w-36 justify-center" 
+        (click)="startDownload($event)"
+        [disabled]="downloadState() !== 'idle'">
+        
+        @switch (downloadState()) {
+            @case ('idle') {
+                <div class="flex items-center justify-center">
+                    <i class="fas fa-download mr-2"></i><span>Download</span>
+                </div>
+            }
+            @case ('downloading') {
+                <div class="absolute top-0 left-0 h-full bg-[var(--md-sys-color-primary)] opacity-30" [style.width.%]="downloadProgress()"></div>
+                <div class="relative z-10 flex items-center justify-center">
+                    <i class="fas fa-spinner fa-spin mr-2"></i><span>Downloading</span>
+                </div>
+            }
+            @case ('downloaded') {
+                <div class="flex items-center justify-center">
+                    <i class="fas fa-check mr-2"></i><span>Downloaded</span>
+                </div>
+            }
+        }
+    </button>
+
+    <div class="music-player-container w-full rounded-[28px] flex items-center p-4 shadow-inner gap-4">
+        <button class="play-button w-[50px] h-[50px] rounded-full flex items-center justify-center transition-transform shadow-lg hover:scale-105 flex-shrink-0" (click)="togglePlay()">
+            <i class="fas" [class.fa-play]="!isPlaying()" [class.fa-pause]="isPlaying()"></i>
+        </button>
+        <div class="progress-bar-container flex-grow h-4">
+             <svg width="100%" height="100%" viewBox="0 0 200 16" preserveAspectRatio="none">
+                <path d="M 0 8 H 200" stroke="var(--md-sys-color-outline)" stroke-width="4" stroke-linecap="round" />
+                <path #wavyProgress class="wavy-progress-path"
+                    d="M 0 8 C 10 0, 10 16, 20 8 S 30 0, 40 8 S 50 16, 60 8 S 70 0, 80 8 S 90 16, 100 8 S 110 0, 120 8 S 130 16, 140 8 S 150 0, 160 8 S 170 16, 180 8 S 190 0, 200 8" 
+                    stroke="var(--md-sys-color-primary)" 
+                    stroke-width="6" 
+                    stroke-linecap="round"
+                    fill="none" />
+            </svg>
+        </div>
+        <div class="volume-control flex items-center gap-2 w-24 lg:w-28 flex-shrink-0">
+            <i class="fas text-lg text-[var(--md-sys-color-on-surface-variant)]"
+               [class.fa-volume-mute]="volume() === 0"
+               [class.fa-volume-down]="volume() > 0 && volume() <= 0.5"
+               [class.fa-volume-up]="volume() > 0.5"></i>
+            <input 
+                type="range" 
+                min="0" 
+                max="1" 
+                step="0.01" 
+                class="volume-slider"
+                [value]="volume()"
+                (input)="onVolumeChange($event)" 
+                aria-label="Volume slider"/>
+        </div>
+    </div>
+    <audio #audioPlayer (timeupdate)="onTimeUpdate()" (ended)="onAudioEnded()">
+        <source [src]="track().audioUrl" type="audio/mpeg">
+    </audio>
+</div>
